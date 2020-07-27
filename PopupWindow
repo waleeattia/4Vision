@@ -4,10 +4,12 @@ function yourFunction(){
     open('https://anikapuri.github.io/4Vision/', 'test', params);
 		//open(url you want to open, name, popup window features)
     
-    setTimeout(yourFunction, 1000);
+    cont = setTimeout(yourFunction, 1000);
     //makes sure the data is always updated 
     
     
 }
 
 yourFunction();
+
+// to stop the program add: clearTimeout(cont)
