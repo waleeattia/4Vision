@@ -1,4 +1,4 @@
-<html></html>
+<html>
 <head>
   <style>
     body {
@@ -38,26 +38,25 @@
         <div class="col-md-6">
           <div class="row">
             <svg id="chart" width="900" height="520"></svg>
+            <button style="margin: 0 auto;" onclick="download_csv()">Download CSV</button> 
           </div>
           <div class="row" style="margin-top: 30px;"></div>
           <div class="row" style="height:30em;">
-            <div class="col">
+            <div class="col-md-7">
               <strong>EMOTION TRACKING RESULTS</strong>
               <div id="results" style="word-wrap:break-word;"></div>
             </div>
-            <div class="col">
+            <div class="col-md-5">
               <div class="row">
                 <strong>DETECTOR LOG MSGS</strong>
               </div>
               <div id="logs"></div>
             </div>
-          </div>
-          
+          </div>   
         </div>
-      </div>
-      
-      
+      </div>     
     </div>
+
     <script src="https://download.affectiva.com/js/3.2.1/affdex.js"></script>
     <script type="text/javascript" src = "process.js"></script>
 
