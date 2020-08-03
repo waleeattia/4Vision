@@ -65,6 +65,8 @@
     <script src="https://d3js.org/d3.v4.js"></script>
 
     <script>
+      //Variables and constants declarations
+      let csvContent = "data:text/csv;charset=utf-8,";
       var lineArr = [];
       var MAX_LENGTH = 100;
       var duration = 500;
@@ -121,6 +123,11 @@
           };
 
           lineArr.push(lineData);
+          
+          //this adds each row in linArr array to the csv file
+          lineArr.forEach(function(rowArray) {
+            csvContent += JSON.stringify(rowArray) + "\n";
+          });
     
           if (lineArr.length > 30) {
             lineArr.shift();
@@ -129,6 +136,12 @@
 
         }
       });
+      
+      //this is the function that executes when the newly added button is clicked (It downloads the file with the data)
+      function download_csv(lineArr) {
+        var encodedUri = encodeURI(csvContent);
+        window.open(encodedUri);
+        }
   
       function resize() {
         if (d3.select("#chart svg").empty()) {
