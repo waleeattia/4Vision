@@ -1,14 +1,19 @@
 ﻿<html>
 
 <head>
-    <title>Zoom WebSDK</title>
+    <title>4VSN :)</title>
+    <link rel="shortcut icon" type="image/png" href="https://www.affectiva.com/wp-content/themes/affectiva-2018-child/img/favicon.ico">
     <style>
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
+
         #chart {
             max-width: 600px;
             max-height: 700px;
+            color: hotpink;
+            border-color: hotpink;
+            margin-left: 17px;
         }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -21,222 +26,44 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="row" id="affdex_elements" style="width:680px;height:480px;"></div>
-                <div class="row" style="margin-top: 30px;"></div>
-                <div class="row" style="border-right: 1px solid black;">
-                    <div class="row" style="margin: 0 auto; margin-top: 20px;">
-                        <button id="start" onclick="onStart()">Start</button>
-                        <button id="stop" onclick="onStop()">Stop</button>
-                        <button id="reset" onclick="onReset()">Reset</button>
-                    </div>
-                    <div class="row" style="margin: 10px;">
-                        <h3>Affectiva JS SDK CameraDetector to track different emotions.</h3>
-                        <p>
-                            <strong>Instructions</strong>
-                            <br>
-                            Press the start button to start the detector.
-                            <br /> When a face is detected, the probabilities of the different emotions are written to the DOM.
-                            <br /> Press the stop button to end the detector.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <svg id="chart" width="900" height="520"></svg>
-                </div>
-                <div class="row" style="margin-top: 30px;"></div>
-                <div class="row" style="height:30em;">
-                    <div class="col">
-                        <strong>EMOTION TRACKING RESULTS</strong>
-                        <div id="results" style="word-wrap:break-word;"></div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <strong>DETECTOR LOG MSGS</strong>
-                        </div>
-                        <div id="logs"></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-    <script src="https://download.affectiva.com/js/3.2.1/affdex.js"></script>
-    <script type="text/javascript" src="process.js"></script>
-    <script src="https://d3js.org/d3.v4.js"></script>
-
-    <script>
-        var lineArr = [];
-        var MAX_LENGTH = 100;
-        var duration = 500;
-        var chart = realTimeLineChart();
-
-        function randomNumberBounds(min, max) {
-            return Math.floor(Math.random() * max) + min;
-        }
-
-        function seedData() {
-            var now = new Date();
-            for (var i = 0; i < MAX_LENGTH; ++i) {
-                lineArr.push({
-                    time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
-                    x: 0,
-                    y: 0,
-                    z: 0
-                });
-            }
-        }
-
-        detector.addEventListener("onImageResultsSuccess", function (faces, image, timestamp) {
-            document.querySelector('#results').innerHTML = "";
-            log('#results', "Timestamp: " + timestamp.toFixed(2));
-            log('#results', "Number of faces found: " + faces.length);
-            if (faces.length > 0) {
-                log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
-
-                log('#results', "Sadness: " + JSON.stringify(faces[0].emotions.sadness, function (key, val) {
-                    return val.toFixed ? Number(val.toFixed(0)) : val;
-                }));
-                log('#results', "Disgust: " + JSON.stringify(faces[0].emotions.disgust, function (key, val) {
-                    return val.toFixed ? Number(val.toFixed(0)) : val;
-                }));
-                log('#results', "Anger: " + JSON.stringify(faces[0].emotions.anger, function (key, val) {
-                    return val.toFixed ? Number(val.toFixed(0)) : val;
-                }));
-                log('#results', "Fear: " + JSON.stringify(faces[0].emotions.fear, function (key, val) {
-                    return val.toFixed ? Number(val.toFixed(0)) : val;
-                }));
-                log('#results', "Surprise: " + JSON.stringify(faces[0].emotions.surprise, function (key, val) {
-                    return val.toFixed ? Number(val.toFixed(0)) : val;
-                }));
-                log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
-                if (document.querySelector('#face_video_canvas') != null)
-                    drawFeaturePoints(image, faces[0].featurePoints);
-
-                var now = new Date();
-                var lineData = {
-                    time: now,
-                    Joy: faces[0].emotions.joy.toFixed(0),
-                    Engagement: faces[0].emotions.engagement.toFixed(0),
-                    Attention: faces[0].expressions.attention.toFixed(0),
-                };
-
-                lineArr.push(lineData);
-
-                if (lineArr.length > 30) {
-                    lineArr.shift();
-                }
-                d3.select("#chart").datum(lineArr).call(chart);
-
-            }
-        });
-
-        function resize() {
-            if (d3.select("#chart svg").empty()) {
-                return;
-            }
-            chart.width(+d3.select("#chart").style("width").replace(/(px)/g, ""));
-            d3.select("#chart").call(chart);
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            seedData();
-            window.setInterval(updateData, 500);
-            d3.select("#chart").datum(lineArr).call(chart);
-            d3.select(window).on('resize', resize);
-        });
-    </script>
-
-    <style>
-        body {
-            background-color: lightpink;
-        }
-
-        .sdk-select {
-            height: 34px;
-            border-radius: 4px;
-        }
-
-        .websdktest button {
-            float: right;
-            margin-left: 5px;
-        }
-
-        #nav-tool {
-            margin-bottom: 0px;
-        }
-
-        #show-test-tool {
-            position: absolute;
-            top: 100px;
-            left: 0;
-            display: block;
-            z-index: 99999;
-        }
-
-        #display_name {
-            width: 250px;
-        }
-
-
-        #websdk-iframe {
-            width: 700px;
-            height: 500px;
-            border: 1px;
-            border-color: red;
-            border-style: dashed;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            margin: 0;
-        }
-    </style>
-
     <nav id="nav-tool" class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">4Vision Webapp :)</a>
+                <a style="color:black; margin-bottom:-15px" class="navbar-brand" href="#"><strong>4Vision Webapp :)</strong></a>
             </div>
             <div id="navbar" class="websdktest">
                 <form class="navbar-form navbar-right" id="meeting_form">
                     <div class="form-group">
-                        <input type="text" name="display_name" id="display_name" value="1.7.10#Local" maxLength="100"
+                        <input type="text" name="display_name" id="display_name" style="width:150px" value="1.7.10#Local" maxLength="100"
                                placeholder="Name" class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"  style="margin: 6px">
                         <input type="text" name="meeting_number" id="meeting_number" value="" maxLength="200"
-                               style="width:150px" placeholder="Meeting Number" class="form-control" required>
+                               style="width:190px; margin-left:-6px; margin-right:-6px" placeholder="Meeting Number" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <input type="text" name="meeting_pwd" id="meeting_pwd" value="" style="width:150px"
                                maxLength="32" placeholder="Meeting Password" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="meeting_email" id="meeting_email" value="" style="width:150px"
+                        <input type="text" name="meeting_email" id="meeting_email" value="" style="width:150px; color:darkgray"
                                maxLength="32" placeholder="Email option" class="form-control">
                     </div>
                     <div class="form-group">
-                        <select id="meeting_role" class="sdk-select">
+                        <select id="meeting_role" class="sdk-select" style="color:black">
                             <option value=0>Attendee</option>
                             <option value=1>Host</option>
                             <option value=5>Assistant</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="meeting_china" class="sdk-select">
+                        <select id="meeting_china" class="sdk-select" style="color:black">
                             <option value=0>Global</option>
                             <option value=1>China</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="meeting_lang" class="sdk-select">
+                        <select id="meeting_lang" class="sdk-select" style="color:black">
                             <option value="en-US">English</option>
                             <option value="de-DE">German Deutsch</option>
                             <option value="es-ES">Spanish Español</option>
@@ -253,7 +80,7 @@
                     </div>
 
                     <input type="hidden" value="" id="copy_link_value" />
-                    <button type="submit" class="btn btn-primary" id="join_meeting">Join</button>
+                    <button type="submit" style="margin-right:15px" class="btn btn-primary" id="join_meeting">Join</button>
                     <button type="submit" class="btn btn-primary" id="join_iframe">Join iFrame</button>
                     <button type="submit" class="btn btn-primary" id="clear_all">Clear</button>
                     <button type="button" link="" onclick="window.copyJoinLink('#copy_join_link')" class="btn btn-primary" id="copy_join_link">Copy Direct join link</button>
@@ -265,8 +92,9 @@
         </div>
     </nav>
 
+
     <div id="show-test-tool">
-        <button type="submit" class="btn btn-primary" id="show-test-tool-btn" title="show or hide top test tool">Show</button>
+        <button type="submit" class="btn btn-primary" id="show-test-tool-btn" style="margin: 6px" title="show or hide top test tool">Show</button>
     </div>
     <script>
         document.getElementById('show-test-tool-btn').addEventListener("click", function (e) {
@@ -290,6 +118,176 @@
 
     <script src="./js/tool.js"></script>
     <script src="./static/index.min.js"></script>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row" id="affdex_elements" style="width:610px;height:480px; margin-left:-5px; margin-right: 15px"></div>
+                <div class="row" style="margin-top: 1px;"></div>
+                <div class="row" style="margin-right: -30px; border-right: 1px solid hotpink;">
+                    <div class="row" style="margin: 0 auto; margin-top: 1px;">
+                        <button style="margin:5px; border-color: hotpink" id="start" onclick="onStart()">Start</button>
+
+                        <button style="margin:5px; border-color: hotpink" id="stop" onclick="onStop()">Stop</button>
+                        <button style="margin:5px; border-color: hotpink" id="reset" onclick="onReset()">Reset</button>
+                    </div>
+                    <div class="row" style="margin: 15px;">
+                        <h3>Affectiva JS SDK CameraDetector to track different emotions.</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <svg id="chart" width="900" height="520"></svg>
+                    <button style="margin: 0 auto; margin-bottom: -10px" onclick="download_csv()">Download CSV</button>
+                </div>
+                <div class="row" style="margin-top: 30px;" ></div>
+                <div class="row" style="height:30em; margin-left:17px">
+                    <div class="col">
+                        <strong>EMOTION TRACKING RESULTS</strong>
+                        <div id="results" style="word-wrap:break-word;"></div>
+                    </div>
+                    <div class="col">
+                        
+                        <div id="logs"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="https://download.affectiva.com/js/3.2.1/affdex.js"></script>
+    <script type="text/javascript" src="process.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+    <script>
+        let csvContent = "data:text/csv;charset=utf-8,";
+        var lineArr = [];
+        var MAX_LENGTH = 100;
+        var duration = 500;
+        var chart = realTimeLineChart();
+
+        function randomNumberBounds(min, max) {
+            return Math.floor(Math.random() * max) + min;
+        }
+
+        function seedData() {
+            var now = new Date();
+            for (var i = 0; i < MAX_LENGTH; ++i) {
+                lineArr.push({
+                    time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
+                    Frustration: 0,
+                    Confusion: 0,
+                    Engagement: 0,
+                    Attetnion: 0
+                });
+            }
+        }
+
+        detector.addEventListener("onImageResultsSuccess", function (faces, image, timestamp) {
+            document.querySelector('#results').innerHTML = "";
+            
+            if (faces.length > 0) {
+                log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
+                if (document.querySelector('#face_video_canvas') != null)
+                    drawFeaturePoints(image, faces[0].featurePoints);
+
+                var now = new Date();
+                var lineData = {
+                    time: now,
+                    Frustration: 0,
+                    Confusion: 0, 
+                    Engagement: faces[0].emotions.engagement.toFixed(0),
+                    Attention: faces[0].expressions.attention.toFixed(0),
+                };
+
+                lineArr.push(lineData);
+
+                if (lineArr.length > 30) {
+                    lineArr.shift();
+                }
+                d3.select("#chart").datum(lineArr).call(chart);
+
+            }
+        });
+
+        //this is the function that executes when the newly added button is clicked (It downloads the file with the data)
+        function download_csv(lineArr) {
+            var encodedUri = encodeURI(csvContent);
+            window.open(encodedUri);
+        }
+
+        function resize() {
+            if (d3.select("#chart svg").empty()) {
+                return;
+            }
+            chart.width(+d3.select("#chart").style("width").replace(/(px)/g, ""));
+            d3.select("#chart").call(chart);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            seedData();
+            window.setInterval(updateData, 1000);
+            d3.select("#chart").datum(lineArr).call(chart);
+            d3.select(window).on('resize', resize);
+        });
+    </script>
+
+
+    <style>
+        body {
+            background-color: lightpink;
+            color: hotpink;
+        }
+
+        .sdk-select {
+            height: 34px;
+            border-radius: 4px;
+            color: hotpink;
+        }
+
+        .websdktest button {
+            float: right;
+            margin-left: 5px;
+            
+        }
+
+        #nav-tool {
+            margin-bottom: 0px;
+            color: hotpink;
+            background-color: deeppink;
+        }
+
+        #show-test-tool {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            display: block;
+            z-index: 99999;
+            color: hotpink;
+        }
+
+        #display_name {
+            width: 250px;
+            
+        }
+
+
+        #websdk-iframe {
+            width: 700px;
+            height: 500px;
+            border: 1px;
+            border-color: red;
+            border-style: dashed;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            margin: 0;
+        }
+    </style>
 
 </body>
 

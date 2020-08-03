@@ -17,7 +17,7 @@ const API_KEY = "MzxfH2emTHa9ph_SU-0Kog";
  * The below generateSignature should be done server side as not to expose your api secret in public
  * You can find an eaxmple in here: https://marketplace.zoom.us/docs/sdk/native-sdks/Web-Client-SDK/tutorial/generate-signature
  */
-const API_SECRET = "PavGEQVBrML5Q0BHymmWpiPDaH7B8MecP86O";
+const API_SECRET = "4YTOJi1UEblAkbi06KHKZdAveYtURU2aE77h";
 
 testTool = window.testTool;
 document.getElementById("display_name").value =
@@ -141,20 +141,20 @@ document.getElementById("join_iframe").addEventListener("click", function (e) {
     alert("Meeting number or username is empty");
     return false;
   }
-  const signature = ZoomMtg.generateSignature({
-    meetingNumber: meetingConfig.mn,
-    apiKey: API_KEY,
-    apiSecret: API_SECRET,
-    role: meetingConfig.role,
-    success: function (res) {
-      console.log(res.result);
-      meetingConfig.signature = res.result;
-      meetingConfig.apiKey = API_KEY;
-      const joinUrl =
-        testTool.getCurrentDomain() +
-        "/meeting.html?" +
-        testTool.serialize(meetingConfig);
-      testTool.createZoomNode("websdk-iframe", joinUrl);
-    },
-  });
+    const signature = ZoomMtg.generateSignature({
+        meetingNumber: meetingConfig.mn,
+        apiKey: API_KEY,
+        apiSecret: API_SECRET,
+        role: meetingConfig.role,
+        success: function (res) {
+            console.log(res.result);
+            meetingConfig.signature = res.result;
+            meetingConfig.apiKey = API_KEY;
+            const joinUrl =
+                testTool.getCurrentDomain() +
+                "/meeting.html?" +
+                testTool.serialize(meetingConfig);
+            testTool.createZoomNode("websdk-iframe", joinUrl);
+        },
+    });
 });
