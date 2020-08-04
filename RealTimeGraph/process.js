@@ -97,7 +97,7 @@
       
         function chart(selection) {
           selection.each(function(data) {
-            data = ["Joy", "Engagement", "Attention"].map(function(c) {
+            data = ["Frustration", "Confusion", "Engagement", "Attention"].map(function(c) {
               return {
                 label: c,
                 values: data.map(function(d) {

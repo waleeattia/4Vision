@@ -80,9 +80,10 @@
         for (var i = 0; i < MAX_LENGTH; ++i) {
           lineArr.push({
             time: new Date(now.getTime() - ((MAX_LENGTH - i) * duration)),
-            x: 0,
-            y: 0,
-            z: 0
+            Frustration: 0,
+            Confusion: 0,
+            Engagement: 0,
+            Attention: 0
           });
         }
       }
@@ -116,7 +117,8 @@
           var now = new Date();
           var lineData = {
             time: now,
-            Joy: faces[0].emotions.joy.toFixed(0),
+            Frustration: 0,
+            Confusion: 0,
             Engagement: faces[0].emotions.engagement.toFixed(0),
             Attention: faces[0].expressions.attention.toFixed(0),
           };
