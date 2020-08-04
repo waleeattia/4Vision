@@ -1,7 +1,7 @@
 // SDK Needs to create video and canvas nodes in the DOM in order to function
       // Here we are adding those nodes a predefined div.
       var divRoot = document.querySelector("#affdex_elements");
-      var width = 620;
+      var width = 640;
       var height = 480;
       var faceMode = affdex.FaceDetectorMode.LARGE_FACES;
       //Construct a CameraDetector and specify the image width / height and face detector mode.
@@ -15,7 +15,7 @@
 
       //Add a callback to notify when the detector is initialized and ready for runing.
       detector.addEventListener("onInitializeSuccess", function() {
-        log('#logs', "The detector reports initialized");
+        
         //Display canvas instead of video feed because we want to draw the feature points on it
         document.querySelector("#face_video_canvas").style.display = "block";
         document.querySelector("#face_video").style.display = "none";
@@ -36,7 +36,6 @@
 
       //function executes when the Stop button is pushed.
       function onStop() {
-        log('#logs', "Clicked the stop button");
         if (detector && detector.isRunning) {
           detector.removeEventListener();
           detector.stop();
@@ -45,7 +44,7 @@
 
       //function executes when the Reset button is pushed.
       function onReset() {
-        log('#logs', "Clicked the reset button");
+
         if (detector && detector.isRunning) {
           detector.reset();
 
@@ -66,7 +65,6 @@
 
       //Add a callback to notify when detector is stopped
       detector.addEventListener("onStopSuccess", function() {
-        log('#logs', "The detector reports stopped");
         document.querySelector("#results").innerHTML = "";
       });
 
@@ -75,16 +73,8 @@
       //Faces object contains probabilities for all the different expressions, emotions and appearance metrics
       detector.addEventListener("onImageResultsSuccess", function(faces, image, timestamp) {
         document.querySelector('#results').innerHTML = "";
-        log('#results', "Timestamp: " + timestamp.toFixed(2));
-        log('#results', "Number of faces found: " + faces.length);
         if (faces.length > 0) {
-          log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
-          log('#results', "Emotions: " + JSON.stringify(faces[0].emotions, function(key, val) {
-            return val.toFixed ? Number(val.toFixed(0)) : val;
-          }));
-          log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
-            return val.toFixed ? Number(val.toFixed(0)) : val;
-          }));
+          
           log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
           if(document.querySelector('#face_video_canvas') != null)
           	drawFeaturePoints(image, faces[0].featurePoints);
@@ -111,14 +101,14 @@
 
 function realTimeLineChart() {
     var margin = { top: 20, right: 20, bottom: 20, left: 20 },
-        width = 600,
+        width = 650,
         height = 500,
         duration = 500,
         color = d3.schemeCategory10;
 
     function chart(selection) {
         selection.each(function (data) {
-            data = ["Joy", "Engagement", "Attention"].map(function (c) {
+            data = ["Frustration", "Confusion", "Engagement", "Attention"].map(function (c) {
                 return {
                     label: c,
                     values: data.map(function (d) {
@@ -171,13 +161,13 @@ function realTimeLineChart() {
             legendEnter.append("rect")
                 .attr("width", 140)
                 .attr("height", 75)
-                .attr("fill", "#ffffff")
-                .attr("fill-opacity", 0.7);
+                .attr("fill", "#FFFFFF")
+                .attr("fill-opacity", 0);
             legendEnter.selectAll("text")
                 .data(data).enter()
                 .append("text")
                 .attr("y", function (d, i) { return (i * 20) + 25; })
-                .attr("x", 5)
+                .attr("x", -10)
                 .attr("fill", function (d) { return z(d.label); });
 
             var svg = selection.select("svg");
@@ -187,9 +177,11 @@ function realTimeLineChart() {
 
             g.select("g.axis.x")
                 .attr("transform", "translate(0," + (height - margin.bottom - margin.top) + ")")
+                .attr("stroke", "#FF69B4")
                 .transition(t)
-                .call(d3.axisBottom(x).ticks(5));
+                .call(d3.axisBottom(x).ticks(3));
             g.select("g.axis.y")
+                .attr("stroke", "#FF69B4")
                 .transition(t)
                 .attr("class", "axis y")
                 .call(d3.axisLeft(y));
