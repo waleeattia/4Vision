@@ -90,12 +90,11 @@
         var ratio = Math.min(hRatio, vRatio);
 
         contxt.strokeStyle = "#FFFFFF";
-        for (var id in featurePoints) {
+        for (var id in featurePoints) {                   
           contxt.beginPath();
           contxt.arc(featurePoints[id].x,
             featurePoints[id].y, 2, 0, 2 * Math.PI);
           contxt.stroke();
-
         }
       }
 
@@ -108,7 +107,7 @@ function realTimeLineChart() {
 
     function chart(selection) {
         selection.each(function (data) {
-            data = ["Frustration", "Confusion", "Engagement", "Attention"].map(function (c) {
+            data = ["Confusion", "Attention", "Engagement"].map(function (c) {
                 return {
                     label: c,
                     values: data.map(function (d) {
